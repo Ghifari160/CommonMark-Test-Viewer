@@ -71,86 +71,6 @@ To extract the HTML portion of a specific test, enter `html<test #>` or
 
     commonmark-test-viewer>
 
-## Contributing
-You may contribute to this tool by submitting a pull request. Please note that
-the development of this tool requires the dependencies as listed below.
-
-### Package managers
-The dependencies required by this tool can be easily acquired through package
-managers.
-
-#### Install on macOS
-The preferred package manager on macOS is [Homebrew]. You can install it by
-running the following command
-
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
-Verify Homebrew by running the following command
-
-    brew -v
-
-The versions should be, at least, as follows
-
-    Homebrew 1.8.6
-    Homebrew/homebrew-core (git revision 304df; last commit 2018-12-23)
-
-### Git
-[Git] is the preferred way to clone the repositories of this tool and the
-CommonMark project. It is preinstalled on most operating systems. This section
-is provided for edge cases where Git is, somehow, not installed by the base
-operating system (I'm looking at you, Windows).
-
-#### Install on macOS
-The preferred way to install Git on macOS is through Homebrew.
-
-    brew install git
-
-Verify Git by running the following command
-
-    git --version
-
-The output should be similar as follows (any version works fine).
-
-    git version 2.20.1
-
-### Node.js
-This tool is developed on [Node.js] v11.5.0. Check your version of Node.js by
-running `node -v`. If you have the right version of Node.js, you may continue to
-the next step.
-
-#### Install on macOS
-The preferred way to install Node.js on macOS is through Homebrew.
-
-    brew install node
-
-Verify Node.js and npm by running the following command
-
-    node -v && npm -v
-
-The versions should be, at least, as follows
-
-    v11.5.0
-    6.5.0
-
-### Python 3
-The CommonMark test suite runs on Python 3. This tool is developed on
-`spec_tests.py` running on Python v3.7.1. Check your version of Python by
-running `python3 --version`. If you have the right version of Python, you may
-continue to the next step.
-
-#### Install on macOS
-The preferred way to install Python on macOS is through Homebrew.
-
-    brew install python3
-
-Verify Python by running the following command
-
-    python3 --version
-
-The version should be, at least, as follows
-
-    Python 3.7.1
-
 ## Troubleshooting
 This section provides guidance on some common errors. The section is in no way
 a complete list.
@@ -164,6 +84,3 @@ This tool requires `spec_tests.py` to accurately extract each tests. Please
 clone the CommonMark repository and provide the tool with `spec_tests.py`.
 
 [CommonMark]: https://commonmark.org "CommonMark"
-[Node.js]: https://nodejs.org/en/ "Node.js"
-[Homebrew]: https://brew.sh "The missing package manager for macOS"
-[Git]: https://git-scm.com "--distributed-is-the-new-centralized"

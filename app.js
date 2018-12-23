@@ -13,7 +13,8 @@ const app =
            + "license."
 };
 
-var specTestsPy = "";
+var hostOS = process.platform, // Get host operating system
+    specTestsPy = "";
 
 process.title = app.title;
 
@@ -36,12 +37,20 @@ if(!fs.existsSync(specTestsPy))
 }
 
 // Get test suite from spec_tests.py
-var st = spawnSync("python3", [specTestsPy, "--dump-tests"],
-{
-  cwd: path.dirname(path.dirname(specTestsPy)),
-  env: process.env,
-  encoding: "utf-8"
-});
+var st,
+    stOpt =
+    {
+      cwd: path.dirname(path.dirname(specTestsPy)),
+      env: process.env,
+      encoding: "utf-8"
+    };
+
+// Spawn child process in Windows
+if(hostOS == "win32")
+  st = spawnSync("py", ["-3", specTestsPy, "--dump-tests"], stOpt);
+// Spawn child process literally everywhere else
+else
+  st = spawnSync("python3", [specTestsPy, "--dump-tests"], stOpt);
 
 if(st.stderr.length > 0)
 {
@@ -54,6 +63,7 @@ if(st.stderr.length > 0)
 
 var testsDump = JSON.parse(st.stdout);
 
+console.log("Running", app.title, "on platform", hostOS);
 console.log("+==========================+");
 console.log("Successfuly loaded", testsDump.length, "tests.");
 console.log("+==========================+");
@@ -69,7 +79,7 @@ stdin.addListener("data", function(d)
   if(input == "about")
   {
     console.log("");
-    console.log(app.title, "v" + app.version.join("."));
+    console.log(app.title, "v" + app.version.join("."), "on platform", hostOS);
     console.log(app.copyright);
     console.log("");
     console.log("THIS PROJECT IS NOT AFFILIATED WITH THE COMMONMARK PROJECT.");
