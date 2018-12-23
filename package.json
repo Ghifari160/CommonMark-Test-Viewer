@@ -3,12 +3,16 @@
   "version": "0.1.0",
   "description": "View a specific portion of the CommonMark test suite",
   "main": "app.js",
+  "bin": {
+    "commonmark-test-viewer": "app.js"
+  },
   "keywords": [
     "commonmark",
     "test",
     "viewer",
     "markdown"
   ],
+  "repository": "ghifari160",
   "author": "GHIFARI160",
   "license": "MIT"
 }

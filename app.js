@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 "use strict";
 
 const fs = require("fs"),
@@ -19,8 +21,12 @@ var hostOS = process.platform, // Get host operating system
 process.title = app.title;
 
 // Get spec_tests.py
-if(process.argv.length > 2)
-  specTestsPy = process.argv[2];
+for(var i = 0; i < process.argv.length; i++)
+{
+  if(process.argv[i] != "node" && path.basename(process.argv[i]) != "node"
+      && process.argv[i] != "app" && path.basename(process.argv[i]) != "app.js")
+    specTestsPy = process.argv[i];
+}
 
 // Verify that spec_tests.py is specified
 if(specTestsPy.length < 1)
