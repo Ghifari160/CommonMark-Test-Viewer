@@ -69,7 +69,7 @@ function __retrieveTests(spec_tests_py, cwd, env, hostPlatform)
 
   // Spawn child process in Windows
   if(hostPlatform == "win32")
-    st = spawnSync("py", ["-3", spec_tests_py, "--dump-tests"]. stOpt);
+    st = spawnSync("py", ["-3", spec_tests_py, "--dump-tests"], stOpt);
   // Spawn child process literally everywhere else
   else
     st = spawnSync("python3", [spec_tests_py, "--dump-tests"], stOpt);
