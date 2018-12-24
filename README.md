@@ -60,18 +60,18 @@ The tool should output something similar to this:
 You can now use the tool. To extract the Markdown portion of a specific test,
 enter `markdown<test #>` or `md<test #>`. Example:
 
-    commonmark-test-viewer> md30
+    CTV> md30
     Example 30
     * Foo
     * * *
     * Bar
 
-    commonmark-test-viewer>
+    CTV>
 
 To extract the HTML portion of a specific test, enter `html<test #>` or
 `ht<test #>`. Example:
 
-    commonmark-test-viewer> ht30
+    CTV> ht30
     Example 30
     <ul>
     <li>Foo</li>
@@ -81,7 +81,7 @@ To extract the HTML portion of a specific test, enter `html<test #>` or
     <li>Bar</li>
     </ul>
 
-    commonmark-test-viewer>
+    CTV>
 
 ## Troubleshooting
 This section provides guidance on some common errors. The section is in no way
