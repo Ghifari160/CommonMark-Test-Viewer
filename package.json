@@ -2,7 +2,7 @@
   "name": "commonmark-test-viewer",
   "version": "0.1.1",
   "description": "View a specific portion of the CommonMark test suite",
-  "main": "app.js",
+  "main": "ctv.lib.js",
   "bin": {
     "commonmark-test-viewer": "app.js"
   },
