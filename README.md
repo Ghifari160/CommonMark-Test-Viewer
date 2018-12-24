@@ -18,7 +18,7 @@ Although you can extract the whole test suite, it is not possible to extract a
 specific portion of the test suite. This tool allows you to extract a specific
 portion from your chosen test suite version.
 
-## How to use this tools
+## How to use this tool
 This tool does not provide the test suite. First you must clone the CommonMark
 spec.
 
@@ -28,22 +28,34 @@ spec.
     git fetch --all --tags --prune
     git checkout tags/0.28
 
-Next, clone this tool.
+Next, install this tool from [npm]
+
+    npm i -g commonmark-test-viewer
+
+Alternatively, clone this tool from GitHub.
 
     cd ~
     git clone https://github.com/Ghifari160/CommonMark-Test-Viewer.git
 
 Run the tool with the CommonMark test suite.
 
+    ctv ~/CommonMark/test/spec_tests.py
+
+Or if you cloned the tool from GitHub
+
     cd ~/CommonMark-Test-Viewer
-    node app ~/CommonMark/test/spec_tests.py
+    node cli.bin ~/CommonMark/test/spec_tests.py
 
 The tool should output something similar to this:
 
-    +==========================+
-    Successfuly loaded 624 tests.
-    +==========================+
-    commonmark-test-viewer>
+    CommonMark Test Viewer v0.2.0
+    CTVShell v0.1.0
+    libctv v0.1.0 (darwin)
+
+    624 tests loaded
+    +=========================================================+
+
+    CTV>
 
 You can now use the tool. To extract the Markdown portion of a specific test,
 enter `markdown<test #>` or `md<test #>`. Example:
@@ -84,3 +96,4 @@ This tool requires `spec_tests.py` to accurately extract each tests. Please
 clone the CommonMark repository and provide the tool with `spec_tests.py`.
 
 [CommonMark]: https://commonmark.org "CommonMark"
+[npm]: https://www.npmjs.com "npm is the package manager for javascript"
