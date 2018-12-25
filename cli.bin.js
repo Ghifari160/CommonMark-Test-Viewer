@@ -198,7 +198,7 @@ stdin.addListener("data", function(d)
       // Attempt to print the test with the specified index
       try
       {
-        console.log(ctv.getMarkdown(inputRange));
+        console.log(ctv.getMarkdown(inputInt));
       }
       catch(e)
       {
