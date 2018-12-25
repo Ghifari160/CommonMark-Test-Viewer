@@ -19,13 +19,13 @@ var specTestsPy = "",
 
 class CTVError extends Error
 {
-  constructor(errCode, addMsg)
+  constructor(errCode, hostPlatform, addMsg = "")
   {
-    super(CTVError.__getErrorMsg(errCode));
+    super(CTVError.__getErrorMsg(errCode, hostPlatform, addMsg));
     this.error_code = errCode;
   }
 
-  static __getErrorMsg(errCode, addMsg = "")
+  static __getErrorMsg(errCode, hostPlatform, addMsg = "")
   {
     var ret = "";
 
@@ -44,8 +44,16 @@ class CTVError extends Error
         break;
 
       case error_code.stp_stderr:
-        ret = "spec_tests.py stderr is not empty. Run python3 " + addMsg
-            + " --dump-tests.";
+        if(hostPlatform == "win32")
+        {
+          ret = "spec_tests.py stderr is not empty. Run py -3 " + addMsg
+              + " --dump-tests";
+        }
+        else
+        {
+          ret = "spec_tests.py stderr is not empty. Run python3 " + addMsg
+              + " --dump-tests.";
+        }
         break;
 
       default:
@@ -75,7 +83,7 @@ function __retrieveTests(spec_tests_py, cwd, env, hostPlatform)
     st = spawnSync("python3", [spec_tests_py, "--dump-tests"], stOpt);
 
   if(st.stderr.length > 0)
-    throw new CTVError(error_code.stp_stderr, spec_tests_py);
+    throw new CTVError(error_code.stp_stderr, hostPlatform, spec_tests_py);
 
   return st.stdout;
 }
@@ -85,6 +93,7 @@ module.exports =
   statInit: false,
   stp: "",
   tests: [],
+  hostPlatform: "",
 
   error_code: error_code,
 
@@ -93,9 +102,9 @@ module.exports =
     var st;
 
     if(spec_tests_py.length < 1)
-      throw new CTVError(error_code.stp_path_unspecified);
+      throw new CTVError(error_code.stp_path_unspecified, hostPlatform);
     else if(!fs.existsSync(spec_tests_py))
-      throw new CTVError(error_code.stp_dne);
+      throw new CTVError(error_code.stp_dne, hostPlatform);
 
     this.stp = spec_tests_py;
 
@@ -109,6 +118,7 @@ module.exports =
     }
 
     this.stp = spec_tests_py;
+    this.hostPlatform = hostPlatform;
     this.tests = JSON.parse(st);
     this.statInit = true;
 
@@ -118,10 +128,10 @@ module.exports =
   getMarkdown: function(index)
   {
     if(!this.statInit)
-      throw new CTVError(error_code.uninit);
+      throw new CTVError(error_code.uninit, this.hostPlatform);
 
     if(index > this.tests.length)
-      throw new CTVError(error_code.t_range_invalid);
+      throw new CTVError(error_code.t_range_invalid, this.hostPlatform);
 
     return "Example " + this.tests[index - 1].example + "\n"
         + this.tests[index - 1].markdown;
@@ -137,7 +147,7 @@ module.exports =
     if(indexRange[0] > this.tests.length || indexRange[0] < 1
         || indexRange[1] > this.tests.length || indexRange[1] < 1
         || indexRange[0] > indexRange[1])
-      throw new CTVError(error_code.t_range_invalid);
+      throw new CTVError(error_code.t_range_invalid, this.hostPlatform);
 
     for(var i = indexRange[0]; i < indexRange[1] + 1; i++)
       stackRet.push(this.getMarkdown(i));
@@ -148,10 +158,10 @@ module.exports =
   getHtml: function(index)
   {
     if(!this.statInit)
-      throw new CTVError(error_code.uninit);
+      throw new CTVError(error_code.uninit, this.hostPlatform);
 
     if(index < 1 || index > this.tests.length)
-      throw new CTVError(error_code.t_range_invalid);
+      throw new CTVError(error_code.t_range_invalid, this.hostPlatform);
 
     return "Example " + this.tests[index - 1].example + "\n"
         + this.tests[index - 1].html;
@@ -162,12 +172,12 @@ module.exports =
     var stackRet = [];
 
     if(!this.statInit)
-      throw new CTVError(error_code.uninit);
+      throw new CTVError(error_code.uninit, this.hostPlatform);
 
     if(indexRange[0] > this.tests.length || indexRange[0] < 1
         || indexRange[1] > this.tests.length || indexRange[1] < 1
         || indexRange[0] > indexRange[1])
-      throw new CTVError(error_code.t_range_invalid);
+      throw new CTVError(error_code.t_range_invalid, this.hostPlatform);
 
     for(var i = indexRange[0]; i < indexRange[1] + 1; i++)
       stackRet.push(this.getHtml(i));
