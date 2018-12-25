@@ -106,8 +106,6 @@ module.exports =
     else if(!fs.existsSync(spec_tests_py))
       throw new CTVError(error_code.stp_dne, hostPlatform);
 
-    this.stp = spec_tests_py;
-
     try
     {
       st = __retrieveTests(spec_tests_py, cwd, env, hostPlatform);
