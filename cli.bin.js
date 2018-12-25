@@ -4,7 +4,11 @@
 "use strict";
 
 const path = require("path"),
-      ctv = require("./ctv.lib.js");
+      { spawnSync } = require("child_process"),
+      homedir = require("os").homedir(),
+      fs = require("fs");
+
+const ctv = require("./ctv.lib.js");
 
 const app =
 {
@@ -14,7 +18,8 @@ const app =
   libVersion: [0, 1, 0],
   author: "GHIFARI160",
   copyright: "(C) 2018 GHIFARI160, all rights reserved. Released under\n"
-           + "the MIT license."
+           + "the MIT license.",
+  latestKnownTag: "0.28"
 };
 
 var hostPlatform = process.platform, // Get host platform
@@ -28,6 +33,121 @@ function banner()
   console.log(app.title, "v" + app.version.join("."));
   console.log("CTVShell v" + app.shellVersion.join("."));
   console.log("libctv v" + app.libVersion.join("."), "(" + hostPlatform + ")");
+}
+
+// Spawns child process
+// @param       string      Child process executable name or path.
+// @param       ref:Array   Arguments of the child process.
+// @param       string      Environment of the child process.
+// @param       string      Working directory of the child process.
+// @param:opt   string      Encoding of the child process stdio.
+function __spawnChildProcess(process, args, env, cwd, encoding = "utf-8")
+{
+  var st,
+      stOpt =
+      {
+        env: env,
+        cwd: cwd,
+        encoding: encoding
+      };
+
+  st = spawnSync(process, args, stOpt);
+
+  return [st.stdout, st.stderr];
+}
+
+// Retrieves Git version
+function __gitVersion()
+{
+  var cp,
+      stStack = [];
+
+  cp = __spawnChildProcess("git", ["--version"], process.env, process.cwd());
+
+  if(cp[0] == null)
+    return [-1, -1, -1];
+  else
+  {
+    stStack = cp[0].split(" ");
+
+    for(var i = 0; i < stStack.length; i++)
+    {
+      if(stStack[i].indexOf(".") > -1 && stStack[i].split(".").length > 2)
+      {
+        return [parseInt(stStack[i].split(".")[0]),
+                parseInt(stStack[i].split(".")[1]),
+                parseInt(stStack[i].split(".")[2])];
+      }
+    }
+  }
+
+  return [-1, -1, -1];
+}
+
+// Clones CommonMark through Git
+function __gitCloneCommonMark()
+{
+  console.log("Cloning CommonMark from ",
+      "https://github.com/commonmark/CommonMark.git" + "....");
+
+  var cp = __spawnChildProcess("git", ["clone",
+      "https://github.com/commonmark/CommonMark.git"], process.env, homedir);
+
+  if(cp[1].length > 0 && cp[1].indexOf("not found") > -1)
+    return false;
+  else
+    return true;
+}
+
+// Checkouts the latest CommonMark version in Git
+// @param   string    latestTag   Git tag for the latest version of CommonMark.
+function __gitCheckoutCommonMarkLatest(latestTag)
+{
+  console.log("Checking out the latest known tag for CommonMark", latestTag,
+      "...");
+
+  var cp = __spawnChildProcess("git", ["checkout", `tags/${latestTag}`],
+      process.env, homedir + "/CommonMark");
+
+  if(cp[1].length > 0 && cp[1].indexOf("error:") > -1)
+    return false;
+  else
+    return true;
+}
+
+function downloadCommonMark(latestTag)
+{
+  var gitVersion = __gitVersion();
+
+  // Check if spec_tests.py exists at the user's home directory
+  if(fs.existsSync(homedir + "/CommonMark/test/spec_tests.py"))
+  {
+    specTestsPy = homedir + "/CommonMark/test/spec_tests.py";
+
+    return true;
+  }
+
+  // Check if Git is installed
+  if(gitVersion[0] != -1 && gitVersion[1] != -1 && gitVersion[2] != -1)
+  {
+    console.log("+=========================================================+");
+    console.log("");
+
+    console.log("Git installed. Attempting to retrieve CommonMark",
+        "through Git...");
+
+    // Clone CommonMark and checkout the latest tag known by this tool
+    if(__gitCloneCommonMark(), __gitCheckoutCommonMarkLatest(latestTag))
+    {
+      console.log("");
+
+      specTestsPy = homedir + "/CommonMark/test/spec_tests.py";
+
+      return true;
+    }
+  }
+
+  return false;
 }
 
 // Prints the about page upon execution of the `about` command
@@ -73,9 +193,26 @@ for(var i = 0; i < process.argv.length; i++)
       && path.basename(process.argv[i]) != "cli.bin"
       && path.basename(process.argv[i]) != "cli.bin.js"
       && process.argv[i] != "cli"
+      && path.basename(process.argv[i]) != "cli"
       && path.basename(process.argv[i]) != "cli.js"
-      && path.basename(process.argv[i]) != "cli")
+      && process.argv[i] != "commonmark-test-viewer"
+      && path.basename(process.argv[i]) != "commonmark-test-viewer"
+      && process.argv[i] != "ctv"
+      && path.basename(process.argv[i]) != "ctv")
     specTestsPy = process.argv[i];
+}
+
+// Print the banner
+banner();
+console.log("");
+
+if(specTestsPy.length < 1 && !downloadCommonMark(app.latestKnownTag))
+{
+  console.warn("Fatal error: spec_tests.py is unspecified and unable to\n"
+      + "retrieve the CommonMark repository from the internet.",
+        "Exiting the tool now...");
+
+  process.exit(1);
 }
 
 // Attempt to initialize libctv
@@ -91,9 +228,7 @@ catch(e)
   process.exit(1);
 }
 
-// Print the banner and indicate the number of tests that are loaded
-banner();
-console.log("");
+// Indicate the number of tests that are loaded
 console.log(`${init} tests loaded`);
 console.log("+=========================================================+");
 console.log("");
