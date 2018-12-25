@@ -198,7 +198,7 @@ for(var i = 0; i < process.argv.length; i++)
       && path.basename(process.argv[i]) != "commonmark-test-viewer"
       && process.argv[i] != "ctv"
       && path.basename(process.argv[i]) != "ctv")
-    specTestsPy = process.argv[i];
+    specTestsPy = path.resolve(process.argv[i]);
 }
 
 // Print the banner
