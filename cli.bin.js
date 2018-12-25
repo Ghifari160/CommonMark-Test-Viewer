@@ -161,12 +161,11 @@ function cmd_about()
   console.log("THIS PROJECT IS NOT AFFILIATED WITH THE COMMONMARK PROJECT.");
   console.log("");
   console.log("+=========================================================+");
-  console.log("The CommonMark spec (spec.txt) and DTD (CommonMark.dtd) are"
-            + "\n\nCopyright (C) 2014-16 John MacFarlane\n\nReleased under "
-            + "the Creative Commons CC-BY-SA 4.0 license:\n<http://creative"
-            + "commons.org/licenses/by-sa/4.0/>.");
+  console.log(fs.readFileSync(__dirname + "/CommonMark.license",
+  {
+    encoding: "utf-8"
+  }));
   console.log("+=========================================================+");
-  console.log("");
 }
 
 // Prints the help page upon execution of the `help` or `?` commands
