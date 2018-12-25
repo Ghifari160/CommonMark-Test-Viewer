@@ -9,7 +9,7 @@ const path = require("path"),
 const app =
 {
   title: "CommonMark Test Viewer",
-  version: [0, 2, 2],
+  version: [0, 2, 3],
   shellVersion: [0, 1, 0],
   libVersion: [0, 1, 0],
   author: "GHIFARI160",
