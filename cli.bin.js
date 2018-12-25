@@ -65,9 +65,15 @@ function cmd_help()
 // Get spec_tests.py
 for(var i = 0; i < process.argv.length; i++)
 {
-  if(process.argv[i] != "node" && path.basename(process.argv[i]) != "node"
+  if(process.argv[i] != "node"
+      && path.basename(process.argv[i]) != "node"
+      && process.argv[i] != "node.exe"
+      && path.basename(process.argv[i]) != "node.exe"
       && process.argv[i] != "cli.bin"
+      && path.basename(process.argv[i]) != "cli.bin"
       && path.basename(process.argv[i]) != "cli.bin.js"
+      && process.argv[i] != "cli"
+      && path.basename(process.argv[i]) != "cli.js"
       && path.basename(process.argv[i]) != "cli")
     specTestsPy = process.argv[i];
 }
