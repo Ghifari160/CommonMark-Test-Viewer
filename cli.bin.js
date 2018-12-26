@@ -13,7 +13,7 @@ const ctv = require("./ctv.lib.js");
 const app =
 {
   title: "CommonMark Test Viewer",
-  version: [0, 2, 3],
+  version: [0, 3, 0],
   shellVersion: [0, 1, 0],
   libVersion: [0, 1, 0],
   author: "GHIFARI160",
